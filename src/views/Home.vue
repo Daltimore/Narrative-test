@@ -31,6 +31,13 @@
         alt=""
         class="absolute w-4 h-4 top-24 left-12 md:left-24 -mt-2"
       />
+      <div
+        v-show="searchQuery !== ''"
+        @click="searchQuery = ''"
+        class="absolute right-24 top-20 w-6 h-6 cursor-pointer"
+      >
+        x
+      </div>
       <div class="pt-5 flex items-center flex-col md:flex-row">
         <h3 class="text-blue-800 font-semibold mr-6">Featured Searches</h3>
         <div
@@ -56,10 +63,9 @@
         v-if="filteredOrders.length > 0"
         class="grid grid-cols-1 md:grid-cols-4 gap-8"
       >
-        <div v-for="(order, index) in filteredOrders" :key="index">
+        <div v-for="order in filteredOrders" :key="order.id">
           <card-component
             :cardDetails="order"
-            :orderIndex="index"
             @handleDelete="handleDelete"
             @openEditModal="openEditModal"
             @handleSelect="handleSelect"
@@ -146,29 +152,22 @@ export default Vue.extend({
       this.selectedOrder = x;
     },
     handleDelete(value) {
-      console.log(value);
-
       this.$confirm(
         "This buy order will permanently deleted. Continue?",
         "Warning",
         { type: "warning", cancelButtonText: "Cancel" }
       )
         .then(() => {
-          const index = this.allOrders.indexOf(value);
-          if (index > -1) {
-            this.allOrders.splice(index, 1);
-          }
-          // const arrIndex = this.allOrders.findIndex(
-          //   (order: any, index: number) => index === value
-          // );
-          // console.log(arrIndex);
-
-          // this.allOrders = this.allOrders.splice(value, 1);
+          let orders = JSON.parse(localStorage.getItem("StoreOrders"));
+          const index = orders.findIndex((item) => {
+            return item.id === value;
+          });
+          orders.splice(index, 1);
           this.$message({
             type: "success",
             message: "Delete completed",
           });
-          localStorage.setItem("StoreOrders", JSON.stringify(this.allOrders));
+          localStorage.setItem("StoreOrders", JSON.stringify(orders));
           this.setOrders();
         })
         .catch(() => {

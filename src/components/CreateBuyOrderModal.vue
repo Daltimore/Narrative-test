@@ -222,7 +222,7 @@ export default Vue.extend({
             JSON.parse(localStorage.getItem("StoreOrders") as string) || [];
           const payload = {
             ...this.addBuyOrderForm,
-            id: arrData.length > 0 ? arrData.length + 1 : 1,
+            id: arrData.length > 0 ? Math.floor(Math.random() * 100) : 1,
           };
           arrData.push(payload);
           localStorage.setItem("StoreOrders", JSON.stringify(arrData));

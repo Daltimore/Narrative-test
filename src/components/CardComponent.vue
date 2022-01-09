@@ -8,7 +8,7 @@
           class="text-blue-800 w-4 h-4 mr-1.5 cursor-pointer"
         ></edit-icon>
       </div>
-      <div @click="deleteOrder(orderIndex)">
+      <div @click="deleteOrder(cardDetails.id)">
         <delete-icon class="text-red-500 w-4 h-4 cursor-pointer"></delete-icon>
       </div>
     </div>
