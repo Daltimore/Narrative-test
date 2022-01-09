@@ -105,7 +105,7 @@
                   />
                 </el-tooltip>
               </el-form-item>
-              <el-form-item>
+              <el-form-item prop="data_package_type">
                 <el-select
                   v-model="addBuyOrderForm.data_package_type"
                   placeholder="Select Data Package Type"
@@ -135,6 +135,7 @@
 </template>
 
 <script lang="ts">
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 import Vue from "vue";
 import TimesIcon from "@/assets/svg-ivons/TimesIcon.vue";
 import CustomInput from "@/components/CustomInput.vue";
@@ -200,17 +201,19 @@ export default Vue.extend({
       this.$emit("updateVisibility", false);
     },
     handleCreate() {
-      console.log("i got here");
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       /// @ts-ignore
       this.$refs["addBuyOrderForm"].validate((valid) => {
         if (valid) {
-          const payload = { ...this.addBuyOrderForm };
-          const allOrders = JSON.parse(
-            localStorage.getItem("StoreOrders") as string
-          );
-          allOrders.push(payload);
-          localStorage.setItem("StoreOrders", JSON.stringify(allOrders));
+          const arrData =
+            JSON.parse(localStorage.getItem("StoreOrders") as string) || [];
+          const payload = {
+            ...this.addBuyOrderForm,
+          };
+          arrData.push(payload);
+          localStorage.setItem("StoreOrders", JSON.stringify(arrData));
+          this.$emit("setOrders");
+          /// @ts-ignore
+          this.$refs["addBuyOrderForm"].resetFields();
           this.closeModal();
         }
       });

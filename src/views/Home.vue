@@ -51,17 +51,28 @@
         Showing Top {{ filteredOrders.length }} Results
       </p>
     </div>
-    <section class="px-24 py-16 grid grid-cols-4 gap-8">
-      <div v-for="order in filteredOrders" :key="order.id">
-        <card-component
-          class=""
-          :cardDetails="order"
-          @handleDelete="handleDelete"
-          @openEditModal="openEditModal"
-        ></card-component>
+    <section class="px-24 py-16">
+      <div v-if="filteredOrders.length > 0" class="grid grid-cols-4 gap-8">
+        <div v-for="(order, index) in filteredOrders" :key="index">
+          <card-component
+            :cardDetails="order"
+            :orderIndex="index"
+            @handleDelete="handleDelete"
+            @openEditModal="openEditModal"
+          ></card-component>
+        </div>
       </div>
+      <h1
+        v-else
+        class="flex justify-center items-center text-4xl text-blue-800"
+      >
+        No Data Available
+      </h1>
     </section>
-    <add-buy-order-modal v-model="showCreateModal"></add-buy-order-modal>
+    <add-buy-order-modal
+      v-model="showCreateModal"
+      @setOrders="setOrders"
+    ></add-buy-order-modal>
     <update-buy-order-modal v-model="showUpdateModal"></update-buy-order-modal>
   </div>
 </template>
@@ -83,6 +94,7 @@ export default Vue.extend({
     showUpdateModal: false,
     searchQuery: "",
     x: AllData,
+    allOrders: [],
     bgImage: {
       backgroundImage: `url(${"https://cdn.narrative.io/cdn-cgi/image/w=2048,h=637,q=100,f=auto/images/data-stream/images/landing-bg-header.png"})`,
       backgroundColor: "rgb(1, 10, 40)",
@@ -104,7 +116,7 @@ export default Vue.extend({
   }),
   computed: {
     filteredOrders() {
-      return (this as any).allOrders.filter((order: any) => {
+      return this.allOrders.filter((order: any) => {
         return (
           order.name.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
           order.data_package_type
@@ -113,37 +125,34 @@ export default Vue.extend({
         );
       });
     },
-    allOrders: {
-      get(): any {
-        const data = JSON.parse(localStorage.getItem("StoreOrders") as string);
-        return data;
-      },
-      set(data: any) {
-        return data;
-      },
-    },
   },
-  // mounted() {
-  //   localStorage.setItem("StoreOrders", JSON.stringify(this.x));
-  // },
+  created() {
+    this.setOrders();
+  },
   methods: {
     setToSearchQuery(value: string) {
       this.searchQuery = value;
     },
     handleDelete(value: any) {
+      console.log(value);
+
       this.$confirm(
         "This buy order will permanently deleted. Continue?",
         "Warning",
         { type: "warning", cancelButtonText: "Cancel" }
       )
         .then(() => {
-          const index = this.allOrders.findIndex((i: any) => i.id === value);
-          this.allOrders = this.allOrders.splice(index, 1);
+          const arrIndex = this.allOrders.findIndex((index: number) => {
+            console.log(index);
+          });
+
+          this.allOrders = this.allOrders.splice(arrIndex, 1);
           this.$message({
             type: "success",
             message: "Delete completed",
           });
           localStorage.setItem("StoreOrders", JSON.stringify(this.allOrders));
+          this.setOrders();
         })
         .catch(() => {
           this.$message({
@@ -157,6 +166,10 @@ export default Vue.extend({
     },
     closeEditModal() {
       this.showUpdateModal = false;
+    },
+    setOrders() {
+      (this as any).allOrders =
+        JSON.parse(localStorage.getItem("StoreOrders") as string) || [];
     },
   },
 });

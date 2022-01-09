@@ -8,7 +8,7 @@
           class="text-blue-800 w-4 h-4 mr-1.5 cursor-pointer"
         ></edit-icon>
       </div>
-      <div @click="deleteOrder(cardDetails.id)">
+      <div @click="deleteOrder(orderIndex)">
         <delete-icon class="text-red-500 w-4 h-4 cursor-pointer"></delete-icon>
       </div>
     </div>
@@ -49,6 +49,9 @@ export default Vue.extend({
   props: {
     cardDetails: {
       type: Object,
+    },
+    orderIndex: {
+      type: Number,
     },
   },
   methods: {
