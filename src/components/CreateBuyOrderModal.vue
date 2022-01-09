@@ -83,6 +83,7 @@
             <el-form
               ref="addBuyOrderForm"
               :model="addBuyOrderForm"
+              :rules="rules"
               class="py-16"
             >
               <el-form-item prop="name">
@@ -159,12 +160,14 @@ export default Vue.extend({
         {
           required: true,
           message: "Please enter order name",
+          trigger: "blur",
         },
       ],
       max_bid_price: [
         {
           required: true,
           message: "Please enter your max bid price",
+          trigger: "blur",
         },
       ],
       data_package_type: [
@@ -195,6 +198,17 @@ export default Vue.extend({
     showModal(val) {
       this.$emit("updateVisibility", val);
     },
+    "addBuyOrderForm.max_bid_price": {
+      immediate: true,
+      handler(x) {
+        if (x > 10000) {
+          this.$message({
+            type: "info",
+            message: "Max Bid Price is $10,000",
+          });
+        }
+      },
+    },
   },
   methods: {
     closeModal() {
@@ -208,6 +222,7 @@ export default Vue.extend({
             JSON.parse(localStorage.getItem("StoreOrders") as string) || [];
           const payload = {
             ...this.addBuyOrderForm,
+            id: arrData.length > 0 ? arrData.length + 1 : 1,
           };
           arrData.push(payload);
           localStorage.setItem("StoreOrders", JSON.stringify(arrData));

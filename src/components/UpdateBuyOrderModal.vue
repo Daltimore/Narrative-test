@@ -121,7 +121,7 @@
                 </el-select>
               </el-form-item>
               <button
-                @click.prevent="handleCreate"
+                @click.prevent="handleEdit"
                 class="bg-blue-600 text-white py-3 w-full rounded"
               >
                 Submit
@@ -135,6 +135,8 @@
 </template>
 
 <script lang="ts">
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import Vue from "vue";
 import TimesIcon from "@/assets/svg-ivons/TimesIcon.vue";
 import CustomInput from "@/components/CustomInput.vue";
@@ -145,7 +147,14 @@ export default Vue.extend({
     prop: "visible",
     event: "updateVisibility",
   },
-  props: ["visible"],
+  props: {
+    visible: {
+      type: Boolean,
+    },
+    selectedOrder: {
+      type: Object,
+    },
+  },
   data: () => ({
     showModal: false,
     editBuyOrderForm: {
@@ -195,25 +204,38 @@ export default Vue.extend({
       this.$emit("updateVisibility", val);
     },
   },
+  updated() {
+    this.editBuyOrderForm = this.selectedOrder;
+  },
   methods: {
     closeModal() {
       this.$emit("updateVisibility", false);
     },
-    handleCreate() {
-      console.log("i got here");
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    handleEdit() {
       /// @ts-ignore
       this.$refs["editBuyOrderForm"].validate((valid) => {
         if (valid) {
           const payload = { ...this.editBuyOrderForm };
-          const allOrders = JSON.parse(
-            localStorage.getItem("StoreOrders") as string
-          );
-          allOrders.push(payload);
-          localStorage.setItem("StoreOrders", JSON.stringify(allOrders));
+          this.changeArray(this.selectedOrder.id, {
+            ...payload,
+            id: this.selectedOrder.id,
+          });
+          /// @ts-ignore
+          this.$refs["editBuyOrderForm"].resetFields();
           this.closeModal();
         }
       });
+    },
+    changeArray(id: number, obj: any) {
+      let items = JSON.parse(localStorage.getItem("StoreOrders") as string);
+      for (var i in items) {
+        if (items[i].id === id) {
+          items[i] = obj;
+          localStorage.setItem("StoreOrders", JSON.stringify(items));
+          this.$emit("setOrders");
+          break;
+        }
+      }
     },
   },
 });

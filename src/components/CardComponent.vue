@@ -1,9 +1,9 @@
 <template>
   <div
-    class="border border-gray-200 rounded p-3 hover:shadow-md hover:border-none"
+    class="cursor-pointer border border-gray-200 rounded p-3 hover:shadow-md hover:border-none"
   >
     <div class="flex justify-end">
-      <div @click="handleOpen">
+      <div @click="handleOpen(cardDetails)">
         <edit-icon
           class="text-blue-800 w-4 h-4 mr-1.5 cursor-pointer"
         ></edit-icon>
@@ -66,8 +66,9 @@ export default Vue.extend({
     deleteOrder(id: any) {
       this.$emit("handleDelete", id);
     },
-    handleOpen() {
+    handleOpen(order: any) {
       this.$emit("openEditModal");
+      this.$emit("handleSelect", order);
     },
   },
 });
