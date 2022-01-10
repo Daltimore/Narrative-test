@@ -1,6 +1,6 @@
 <template>
   <div
-    class="cursor-pointer border border-gray-200 rounded p-3 hover:shadow-md hover:border-none"
+    class="cursor-pointer rounded-xl w-full md:w-72 border border-gray-200 rounded p-3 hover:shadow-xl hover:border-none"
   >
     <div class="flex justify-end">
       <div @click="handleOpen(cardDetails)">

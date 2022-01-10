@@ -61,7 +61,7 @@
     <section class="px-6 md:px-24 py-16">
       <div
         v-if="filteredOrders.length > 0"
-        class="grid grid-cols-1 md:grid-cols-4 gap-8"
+        class="grid grid-cols-1 md:grid-cols-4 gap-5"
       >
         <div v-for="order in filteredOrders" :key="order.id">
           <card-component
