@@ -1,24 +1,15 @@
-# narrative-marketplace
+# Narrative-marketplace
 
-## Project setup
-```
-yarn install
-```
+## Technology Stack
+* VueJS
+* TypeScript
+* TailwindCSS
 
-### Compiles and hot-reloads for development
-```
-yarn serve
-```
 
-### Compiles and minifies for production
+## Project setup (On your Local Machine)
 ```
-yarn build
+* run yarn install
+* run yarn run serve
 ```
-
-### Lints and fixes files
-```
-yarn lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+## Demo Link
+https://narrative-marketplace.netlify.app/
